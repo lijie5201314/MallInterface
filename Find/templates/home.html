@@ -1,0 +1,70 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询界面</title>
+    <script type="text/javascript" charset="utf-8" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mall_pro = ''
+            var type_pro = ''
+            mall = $('#mall')
+            $.get('/malls/0/',function (dic) {
+                $.each(dic.data,function (index,item) {
+                    mall.append('<option value="'+item[0]+':'+item[2]+'">'+item[1]+'</option>')
+                })
+            })
+
+            $('#mall').change(function () {
+                mall_pro = $(this).val().split(":")[1];
+                type = $('#type');
+                $.get('/types/'+$(this).val().split(":")[0]+'/',function (list) {
+                    type.empty().append('<option value="">请选择商品类型</option>')
+                    $.each(list.data,function (index,item) {
+                        type.append('<option value="'+item.id+':'+item.title2+'">'+item.title+'</option>')
+                    })
+                });
+            });
+            $('#type').change(function () {
+
+                type_pro = $(this).val().split(":")[1];
+
+            });
+
+            $('#btn').click(function () {
+
+                brand_pro = $("input[name='brand']").val();
+                window.open('http://127.0.0.1:8000/find?shop='+mall_pro+"&type="+type_pro+"&brand="+brand_pro)
+            })
+
+        })
+
+    </script>
+
+
+
+
+</head>
+<body>
+<select id="mall">
+    <option value="">请选择商城</option>
+</select>
+
+<select id="type">
+    <option value="">请选择商品类型</option>
+</select>
+<br>
+<br>
+<br>
+品牌查询<input name="brand" type="text">
+<br>
+<br>
+<hr>
+<br>
+名字查询<input name="name" type="text">
+<button id="btn">查询</button>
+
+
+</body>
+</html>
